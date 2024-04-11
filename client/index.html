@@ -2,10 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statele</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    
+    <main>
+        <header>
+            <h1>Statele</h1>
+        </header>
+        <div class="state-img">a</div>
+        <div id="game-container">
+            <!-- Display the game elements here -->
+            <p>Guess the state:</p>
+            <form id="guess-form">
+                <input type="text" id="guess-input" class="guess" placeholder="Enter your guess">
+                <button type="submit" id="guess" class="guess">Submit</button>
+            </form>
+            <div class="result" id="guess1">testing 123</div>
+            <div class="result" id="guess2"></div>
+            <div class="result" id="guess3"></div>
+            <div class="result" id="guess4"></div>
+            <div class="result" id="guess5"></div>
+        </div>
+        
+
+
+
+    </main>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
