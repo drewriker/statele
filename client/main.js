@@ -30,7 +30,7 @@ function handleSubmit(e) {
 }
 
 function validateGuess(guess) {
-	const guessValidated = axios.post("http://localhost:4004/validate", {
+	const guessValidated = axios.post("/validate", {
 		guess,
 	});
 	return guessValidated;
@@ -152,7 +152,7 @@ function resetResultDivs() {
 
 async function getCurrentState() {
 	try {
-		const response = await axios.get("http://localhost:4004/current-state");
+		const response = await axios.get("/current-state");
 		const state = response.data;
 		console.log(state);
 		return state;
@@ -164,7 +164,7 @@ async function getCurrentState() {
 
 async function fetchStatesList() {
 	try {
-		const response = await axios.get("http://localhost:4004/states-list");
+		const response = await axios.get("/states-list");
 		const states = response.data;
 		const datalist = document.getElementById("statesList");
 
@@ -192,7 +192,7 @@ function playAgain() {
 function getState() {
 	stateImg.innerHTML = "";
 
-	axios.get("http://localhost:4004/state").then((res) => {
+	axios.get("/state").then((res) => {
 		let { image } = res.data[0];
 		var imgElement = document.createElement("img");
 		imgElement.src = image;
