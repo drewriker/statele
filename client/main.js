@@ -3,10 +3,16 @@ const stateGuess = document.querySelector("#guess-input");
 const results = document.querySelector(".results");
 const stateSelect = document.querySelector("#states");
 const stateImg = document.querySelector(".state-img");
+const playAgainBtn = document.getElementById("play-again-btn");
+const modal = document.getElementById("modal");
 
 let remainingGuesses = 5;
 let userGuess = [];
 let gameOver = false;
+
+document.addEventListener("DOMContentLoaded", function () {
+	modal.style.display = "none";
+});
 
 function handleSubmit(e) {
 	e.preventDefault();
@@ -34,61 +40,107 @@ async function handleValidationResult(result) {
 	// console.log(result.data.guess);
 	const isCorrect = result.data.guess;
 	if (isCorrect) {
-		alert("Congratulations! You guessed the correct state!");
-		getState();
-		stateGuess.value = "";
-		remainingGuesses = 5; // Reset remaining guesses
-        resetResultDivs()
+		addResult(true)
 	} else {
 		remainingGuesses--;
-		if (remainingGuesses === 0) {
+		if (remainingGuesses === -1) {
+			playAgain();
+		} else if (remainingGuesses === 0) {
 			try {
+                addResult(false)
 				let state = await getCurrentState();
-				// console.log(state);
-				alert(
-					`Sorry, you've used all your guesses. The correct state was ${state}.`
-				);
-				getState(); // Fetch new state after incorrect guess
-				remainingGuesses = 5; // Reset remaining guesses
-                resetResultDivs()
+				message = `Sorry, you've used all your guesses. The correct state was ${state}.`;
+				showModal(message);
 			} catch (error) {
 				console.error("Error occurred:", error);
 			}
 		} else {
-            const resultDiv = document.querySelectorAll(".result");
-            for (let i = 0; i < resultDiv.length; i++) {
-                if (resultDiv[i].innerHTML === "") {
-                    // Create a new <span> element for the state guess
-                    const guessSpan = document.createElement("span");
-                    guessSpan.textContent = stateGuess.value.trim();
-        
-                    // Create a new <span> element for the red X
-                    const redXSpan = document.createElement("span");
-                    redXSpan.textContent = " ❌"; // Unicode for the red X symbol
-        
-                    // Set the red color for the red X
-                    redXSpan.style.color = "red";
-        
-                    // Append the state guess and red X to the resultDiv
-                    resultDiv[i].appendChild(guessSpan);
-                    resultDiv[i].appendChild(redXSpan);
-        
-                    break; // Exit the loop after updating the first empty div
-                }
-            }
-            stateGuess.value = "";
-        }
-        // {
-		// 	const resultDiv = document.querySelectorAll(".result");
-		// 	for (let i = 0; i < resultDiv.length; i++) {
-		// 		if (resultDiv[i].innerHTML === "") {
-		// 			resultDiv[i].textContent = stateGuess.value.trim();
-		// 			break; // Exit the loop after updating the first empty div
-		// 		}
-		// 	}
-		// 	stateGuess.value = "";
-		// }
+			addResult(false)
+		}
 	}
+}
+
+function addResult(isCorrect) {
+	if (isCorrect) {
+        remainingGuesses--;
+		message = "Congratulations! You guessed the correct state!";
+
+		// Create a div for guess content
+		let guessContent = document.createElement("div");
+		guessContent.classList.add("guess-content");
+		guessContent.textContent = stateGuess.value.trim();
+
+		// Create a div for the green check mark
+		const greenCheckContainer = document.createElement("div");
+		greenCheckContainer.classList.add("green-check-container");
+
+		// Create a span for the green check mark
+		const greenCheckSpan = document.createElement("span");
+		greenCheckSpan.classList.add("green-check");
+		greenCheckSpan.textContent = "✅";
+
+		// Append the guess content and green check mark to the result div
+		const resultDiv = getResultDiv();
+		resultDiv.appendChild(guessContent);
+		resultDiv.appendChild(greenCheckContainer);
+		greenCheckContainer.appendChild(greenCheckSpan);
+		stateGuess.value = "";
+		remainingGuesses = 0;
+		showModal(message);
+	} else {
+		const resultDiv = getResultDiv();
+		// Create a div for guess content
+		const guessContent = document.createElement("div");
+		guessContent.classList.add("guess-content");
+		guessContent.textContent = stateGuess.value.trim();
+
+		// Create a div to contain the red X with its border
+		const redXContainer = document.createElement("div");
+		redXContainer.classList.add("red-x-container");
+
+		// Create a span for the red X
+		const redXSpan = document.createElement("span");
+		redXSpan.classList.add("red-x");
+		redXSpan.textContent = "❌";
+
+		// Append the red X span to the red X container
+		redXContainer.appendChild(redXSpan);
+
+		// Append guess content and red X container to the resultDiv
+		resultDiv.appendChild(guessContent);
+		resultDiv.appendChild(redXContainer);
+		stateGuess.value = "";
+	}
+}
+
+function showModal(message) {
+	const modal = document.getElementById("modal");
+	modal.style.display = "block";
+
+	// Display custom message in modal
+	const modalContent = document.querySelector(".modal-content");
+	modalContent.innerHTML = message;
+
+	const playAgainBtn = document.createElement("button");
+	playAgainBtn.setAttribute("id", "play-again-btn");
+	playAgainBtn.textContent = "Play Again";
+
+	// Append button to modal content
+	modalContent.appendChild(playAgainBtn);
+
+	// Close modal when the close button or anywhere outside the modal is clicked
+	window.onclick = function (event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	};
+
+	playAgainBtn.addEventListener("click", playAgain);
+}
+
+function getResultDiv() {
+	return document.querySelector(`#guess${remainingGuesses + 1}`);
+	// console.log(remainingGuesses);
 }
 
 function resetResultDivs() {
@@ -110,6 +162,33 @@ async function getCurrentState() {
 	}
 }
 
+async function fetchStatesList() {
+	try {
+		const response = await axios.get("http://localhost:4004/states-list");
+		const states = response.data;
+		const datalist = document.getElementById("statesList");
+
+		// Clear existing options
+		datalist.innerHTML = "";
+
+		// Populate datalist with states
+		states.forEach((state) => {
+			const option = document.createElement("option");
+			option.value = state;
+			datalist.appendChild(option);
+		});
+	} catch (error) {
+		console.error("Error fetching states:", error);
+	}
+}
+
+function playAgain() {
+	resetResultDivs();
+	getState();
+	stateGuess.value = "";
+	location.reload();
+}
+
 function getState() {
 	stateImg.innerHTML = "";
 
@@ -122,4 +201,6 @@ function getState() {
 }
 
 getState();
+fetchStatesList();
+
 form.addEventListener("submit", handleSubmit);

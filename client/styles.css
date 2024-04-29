@@ -77,8 +77,64 @@ header h1 {
     margin: 5px;
 }
 
-.red-x {
+.guess-content {
     flex: 1;
-    color: red;
-    margin-left: 10em;
+    padding: 0 10px;
+}
+
+.red-x-container, .green-check-container {
+    border-left: 2px solid #353335; /* Add left border */
+    padding: 0 10px;
+}
+
+.red-x, .green-check {
+    color: red; /* Red for X, green for check */
+}
+
+/* modal stuff */
+.modal {
+    /* display: none; */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+#play-again-btn {
+    margin-top: 2em;
+    width: 25%;
+    height: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }

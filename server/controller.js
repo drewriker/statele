@@ -30,7 +30,7 @@ let getState = (req, res) => {
 };
 
 const getCurrentState = (req, res) => {
-    console.log(currentState)
+	console.log(currentState);
 	res.status(200).send(currentState);
 };
 
@@ -45,8 +45,20 @@ const userGuess = (req, res) => {
 	}
 };
 
+const fetchStatesList = async (req, res) => {
+	try {
+		const dbResults = await sequelize.query(`SELECT name FROM states;`);
+		const stateNames = dbResults[0].map((row) => row.name);
+		res.status(200).send(stateNames);
+	} catch (error) {
+		console.error("Error fetching states list:", error);
+		res.status(500).send({ error: "Internal server error" });
+	}
+};
+
 module.exports = {
 	getState,
 	userGuess,
 	getCurrentState,
+    fetchStatesList
 };

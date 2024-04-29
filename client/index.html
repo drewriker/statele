@@ -18,14 +18,19 @@
         <div id="game-container">
             <!-- Display the game elements here -->
             <form id="guess-form">
-                <input type="text" id="guess-input" class="guess" placeholder="Enter your guess">
+                <!-- <input type="text" id="guess-input" class="guess" placeholder="Enter your guess"> -->
+                <input type="text" id="guess-input" list="statesList" class="guess" placeholder="Enter your guess">
+                <datalist id="statesList"></datalist>
                 <button type="submit" id="submit-guess" class="guess">Guess</button>
             </form>
-            <div class="result" id="guess1"></div>
-            <div class="result" id="guess2"></div>
-            <div class="result" id="guess3"></div>
-            <div class="result" id="guess4"></div>
             <div class="result" id="guess5"></div>
+            <div class="result" id="guess4"></div>
+            <div class="result" id="guess3"></div>
+            <div class="result" id="guess2"></div>
+            <div class="result" id="guess1"></div>
+        </div>
+        <div id="modal" class="modal">
+            <div class="modal-content"></div>
         </div>
         
 
