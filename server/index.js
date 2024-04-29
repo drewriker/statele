@@ -14,6 +14,8 @@ const {
 
 app.use(express.json());
 app.use(cors());
+app.use(express.static(__dirname + '/../client'));
+console.log(`${__dirname}`)
 
 //seed database
 app.post("/seed", seed);
