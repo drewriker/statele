@@ -15,7 +15,7 @@ const {
 app.use(express.json());
 app.use(cors());
 app.use(express.static(__dirname + '/../client'));
-console.log(`${__dirname}`)
+app.use('/state_img', express.static('../state_img'));
 
 //seed database
 app.post("/seed", seed);
@@ -32,5 +32,4 @@ app.get("/states-list", fetchStatesList);
 //validate users guess
 app.post("/validate", userGuess);
 
-// setInterval(getState, 1000 * 20) // new state every hour
 app.listen(SERVER_PORT, () => console.log(`up on ${SERVER_PORT}`));

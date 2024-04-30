@@ -21,22 +21,18 @@ let getState = (req, res) => {
         LIMIT 1;`
 		)
 		.then((dbResults) => {
-			// console.log(dbResults[0][0]);
 			currentState = dbResults[0][0].name;
-			// console.log(currentState);
 			res.status(200).send(dbResults[0]);
 		})
 		.catch((err) => console.log(err));
 };
 
 const getCurrentState = (req, res) => {
-	console.log(currentState);
 	res.status(200).send(currentState);
 };
 
 const userGuess = (req, res) => {
 	const { guess } = req.body;
-	console.log(guess);
 
 	if (guess.toLowerCase() === currentState.toLowerCase()) {
 		res.status(200).send({ guess: true });

@@ -23,7 +23,6 @@ function handleSubmit(e) {
 	}
 
 	const userGuess = stateGuess.value.trim();
-	// console.log(userGuess);
 	validateGuess(userGuess)
 		.then(handleValidationResult)
 		.catch((err) => console.log(err));
@@ -37,17 +36,16 @@ function validateGuess(guess) {
 }
 
 async function handleValidationResult(result) {
-	// console.log(result.data.guess);
 	const isCorrect = result.data.guess;
 	if (isCorrect) {
-		addResult(true)
+		addResult(true);
 	} else {
 		remainingGuesses--;
 		if (remainingGuesses === -1) {
 			playAgain();
 		} else if (remainingGuesses === 0) {
 			try {
-                addResult(false)
+				addResult(false);
 				let state = await getCurrentState();
 				message = `Sorry, you've used all your guesses. The correct state was ${state}.`;
 				showModal(message);
@@ -55,14 +53,14 @@ async function handleValidationResult(result) {
 				console.error("Error occurred:", error);
 			}
 		} else {
-			addResult(false)
+			addResult(false);
 		}
 	}
 }
 
 function addResult(isCorrect) {
 	if (isCorrect) {
-        remainingGuesses--;
+		remainingGuesses--;
 		message = "Congratulations! You guessed the correct state!";
 
 		// Create a div for guess content
@@ -140,7 +138,6 @@ function showModal(message) {
 
 function getResultDiv() {
 	return document.querySelector(`#guess${remainingGuesses + 1}`);
-	// console.log(remainingGuesses);
 }
 
 function resetResultDivs() {
@@ -154,7 +151,6 @@ async function getCurrentState() {
 	try {
 		const response = await axios.get("/current-state");
 		const state = response.data;
-		console.log(state);
 		return state;
 	} catch (error) {
 		console.error("Error fetching current state:", error);
